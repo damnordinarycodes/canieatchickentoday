@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --color-cream: #fbf5ea;
+  --color-cream-dark: #f3ead9;
+  --color-warm-white: #fffdf9;
+  --color-charcoal: #26221d;
+  --color-charcoal-soft: #4a443c;
+  --color-soft-orange: #ff9a62;
+  --color-soft-orange-dark: #e97f45;
+  --color-muted-green: #6f9c7d;
+  --color-muted-green-dark: #517a5f;
+  --color-accent-red: #d4574a;
+  --color-accent-red-dark: #b9402f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-soft-orange) 35%, transparent);
+}
+
+/* subtle grain texture overlay, used via the .grain utility */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.glass {
+  background-color: color-mix(in srgb, var(--color-warm-white) 60%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, white 50%, transparent);
+}
