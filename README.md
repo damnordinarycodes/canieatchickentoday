@@ -230,6 +230,47 @@ the app straight at the `mongo` container. The same production guard in
 database) still applies, so a Compose misconfiguration surfaces immediately
 in `docker compose logs app` rather than silently losing data on restart.
 
+## Deploying to AWS (EC2)
+
+AWS's plain-VPS equivalent is EC2, so this reuses the exact same
+`Dockerfile` / `docker-compose.yml` / `Caddyfile` from the VPS section above
+— nothing AWS-specific to build, just AWS-specific setup steps. (AWS also
+has managed-container options — ECS/Fargate, App Runner — but those need the
+server rewritten to not manage its own MongoDB container and to run behind
+a load balancer with a separately-hosted database like DocumentDB or Atlas,
+which is a bigger lift for no real benefit at this app's scale. EC2 is the
+straightforward match for what's already built.)
+
+1. **Launch the instance** — EC2 console → Launch instance:
+   - AMI: **Ubuntu Server 24.04 LTS**
+   - Instance type: `t3.micro` (free-tier eligible for 12 months) or `t3.small`
+     if you want more headroom
+   - Key pair: create/select one — you'll need it to SSH in
+   - Network settings → Security group: allow **SSH (22)** from your IP,
+     **HTTP (80)** and **HTTPS (443)** from anywhere
+   - Storage: the default 8 GB gp3 volume is enough
+2. **(Optional) Auto-provision on boot** — paste `.aws/ec2-user-data.sh`
+   into "Advanced details → User data" before launching. It installs Docker,
+   clones the repo, and runs `docker compose up -d --build` automatically —
+   the instance is serving traffic by the time it finishes booting, no SSH
+   step needed. Edit `REPO_URL` in that file first if you forked the repo.
+3. **Allocate an Elastic IP** (EC2 → Elastic IPs → Allocate, then Associate
+   with the instance) so the public IP survives a stop/start — otherwise a
+   restarted instance gets a new IP and breaks your domain's `A` record.
+4. Point your domain's `A` record at the Elastic IP, then either:
+   - Skip straight to step 6 if you used the user-data script, or
+   - SSH in (`ssh -i your-key.pem ubuntu@<elastic-ip>`) and follow steps 2-5
+     from the VPS section above (install Docker, edit `Caddyfile`,
+     `docker compose up -d --build`) — identical steps, just on EC2 instead
+     of a Droplet.
+5. To deploy an update: SSH in, `cd /opt/chicken-day` (or wherever you
+   cloned it), `git pull && docker compose up -d --build`.
+
+Same as the VPS section: `MONGODB_URI` doesn't need setting by hand (Compose
+points the app at the `mongo` container), and the production guard in
+`server/src/db.js` still fails fast instead of silently using an in-memory
+database.
+
 ## Underlying per-state data
 
 `/api/check`, `/api/states`, and `/api/towns` are the original per-state/date
