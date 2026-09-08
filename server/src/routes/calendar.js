@@ -3,6 +3,7 @@ import CalendarDay from "../models/CalendarDay.js";
 import { computeDayInfo } from "../data/defaultCalendar.js";
 import { checkChicken } from "../logic/checkChicken.js";
 import { RELIGIONS, computeReligionDayInfo } from "../data/religionCalendar.js";
+import { REGIONS, computeRegionDayInfo } from "../data/regionCalendar.js";
 
 const router = Router();
 const DAY_FIELDS = "-_id date weekday status occasion description";
@@ -54,7 +55,7 @@ function toCalendarDay({ date, weekday, reasons }) {
 router.get("/date/:date", async (req, res, next) => {
   try {
     const { date } = req.params;
-    const { state, religion } = req.query;
+    const { state, religion, region } = req.query;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return res.status(400).json({ error: "date must be in YYYY-MM-DD format" });
     }
@@ -64,6 +65,13 @@ router.get("/date/:date", async (req, res, next) => {
         return res.status(400).json({ error: `Unknown religion: ${religion}` });
       }
       return res.json(computeReligionDayInfo(religion, date));
+    }
+
+    if (region) {
+      if (!REGIONS.includes(region)) {
+        return res.status(400).json({ error: `Unknown region: ${region}` });
+      }
+      return res.json(computeRegionDayInfo(region, date));
     }
 
     if (state) {
@@ -82,7 +90,7 @@ router.get("/:year/:month", async (req, res, next) => {
   try {
     const year = parseInt(req.params.year, 10);
     const month = parseInt(req.params.month, 10);
-    const { state, religion } = req.query;
+    const { state, religion, region } = req.query;
 
     if (!Number.isInteger(year) || !Number.isInteger(month) || month < 1 || month > 12) {
       return res.status(400).json({ error: "year/month must be numeric, month between 1 and 12" });
@@ -95,6 +103,17 @@ router.get("/:year/:month", async (req, res, next) => {
       const daysInMonth = new Date(year, month, 0).getDate();
       const results = Array.from({ length: daysInMonth }, (_, i) =>
         computeReligionDayInfo(religion, `${year}-${pad(month)}-${pad(i + 1)}`)
+      );
+      return res.json(results);
+    }
+
+    if (region) {
+      if (!REGIONS.includes(region)) {
+        return res.status(400).json({ error: `Unknown region: ${region}` });
+      }
+      const daysInMonth = new Date(year, month, 0).getDate();
+      const results = Array.from({ length: daysInMonth }, (_, i) =>
+        computeRegionDayInfo(region, `${year}-${pad(month)}-${pad(i + 1)}`)
       );
       return res.json(results);
     }

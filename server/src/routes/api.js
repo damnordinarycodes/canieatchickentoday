@@ -2,6 +2,7 @@ import { Router } from "express";
 import State from "../models/State.js";
 import Town from "../models/Town.js";
 import { checkChicken } from "../logic/checkChicken.js";
+import { regionOfState } from "../data/regionCalendar.js";
 
 const router = Router();
 
@@ -34,6 +35,45 @@ router.get("/check", async (req, res, next) => {
 
     const result = await checkChicken(state || null, dateStr);
     res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Turns browser geolocation coordinates into one of the 4 regions, via
+// OpenStreetMap's free Nominatim reverse-geocoder (no API key needed) to
+// find the Indian state, then the same state->region mapping used by the
+// region-filtered calendar.
+router.get("/region", async (req, res, next) => {
+  try {
+    const lat = Number(req.query.lat);
+    const lon = Number(req.query.lon);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      return res.status(400).json({ error: "lat and lon query params are required numbers" });
+    }
+
+    const geoRes = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=5&addressdetails=1`,
+      { headers: { "User-Agent": "chicken-day-app/1.0 (reverse geocoding for a regional chicken-day calendar)" } }
+    );
+    if (!geoRes.ok) {
+      return res.status(502).json({ error: "Reverse geocoding lookup failed" });
+    }
+    const geo = await geoRes.json();
+    const stateName = geo?.address?.state;
+    const countryCode = geo?.address?.country_code;
+
+    if (countryCode !== "in" || !stateName) {
+      return res.status(422).json({ error: "This location doesn't appear to be in India" });
+    }
+
+    const region = regionOfState(stateName);
+    if (!region) {
+      return res.status(422).json({ error: `Couldn't map "${stateName}" to a region` });
+    }
+
+    res.json({ state: stateName, region });
   } catch (err) {
     next(err);
   }

@@ -24,19 +24,35 @@ export default function App() {
   const [selectedDate, setSelectedDate] = useState(getInitialDate);
   const [selectedState, setSelectedState] = useState(() => getInitialParam("state"));
   const [selectedReligion, setSelectedReligion] = useState(() => getInitialParam("religion"));
-  const { dayInfo, loading } = useDayInfo(selectedDate, selectedState, selectedReligion);
+  const [selectedRegion, setSelectedRegion] = useState(() => getInitialParam("region"));
+  const { dayInfo, loading } = useDayInfo(selectedDate, selectedState, selectedReligion, selectedRegion);
 
-  // State and religion are two different lenses on the same calendar — picking
-  // one clears the other rather than trying to combine them (the underlying
-  // data doesn't support "Hindu customs in Maharashtra" as a single view).
+  // State, religion and region are three different lenses on the same
+  // calendar — picking one clears the other two rather than trying to
+  // combine them (the underlying data doesn't support e.g. "Hindu customs
+  // in North India" as a single view).
   const handleStateChange = (value) => {
     setSelectedState(value);
-    if (value) setSelectedReligion("");
+    if (value) {
+      setSelectedReligion("");
+      setSelectedRegion("");
+    }
   };
 
   const handleReligionChange = (value) => {
     setSelectedReligion(value);
-    if (value) setSelectedState("");
+    if (value) {
+      setSelectedState("");
+      setSelectedRegion("");
+    }
+  };
+
+  const handleRegionChange = (value) => {
+    setSelectedRegion(value);
+    if (value) {
+      setSelectedState("");
+      setSelectedReligion("");
+    }
   };
 
   useEffect(() => {
@@ -46,8 +62,10 @@ export default function App() {
     else url.searchParams.delete("state");
     if (selectedReligion) url.searchParams.set("religion", selectedReligion);
     else url.searchParams.delete("religion");
+    if (selectedRegion) url.searchParams.set("region", selectedRegion);
+    else url.searchParams.delete("region");
     window.history.replaceState(null, "", url);
-  }, [selectedDate, selectedState, selectedReligion]);
+  }, [selectedDate, selectedState, selectedReligion, selectedRegion]);
 
   return (
     <div className="min-h-screen bg-cream font-sans text-charcoal antialiased">
@@ -59,6 +77,8 @@ export default function App() {
         onStateChange={handleStateChange}
         religion={selectedReligion}
         onReligionChange={handleReligionChange}
+        region={selectedRegion}
+        onRegionChange={handleRegionChange}
         dayInfo={dayInfo}
         loading={loading}
         onCheckToday={() => setSelectedDate(todayISO())}
@@ -69,12 +89,14 @@ export default function App() {
           selectedDate={selectedDate}
           state={selectedState}
           religion={selectedReligion}
+          region={selectedRegion}
           onSelect={setSelectedDate}
         />
         <DayDetails
           dateISO={selectedDate}
           state={selectedState}
           religion={selectedReligion}
+          region={selectedRegion}
           dayInfo={dayInfo}
           loading={loading}
         />

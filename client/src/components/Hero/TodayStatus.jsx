@@ -3,7 +3,7 @@ import { formatLong } from "../../utils/date";
 import { statusMeta } from "../../utils/status";
 import { scopeLabel } from "../../utils/scope";
 
-export default function TodayStatus({ dateISO, state, religion, dayInfo, loading }) {
+export default function TodayStatus({ dateISO, state, religion, region, dayInfo, loading }) {
   const status = dayInfo?.status || "allowed";
   const meta = statusMeta(status);
 
@@ -11,7 +11,7 @@ export default function TodayStatus({ dateISO, state, religion, dayInfo, loading
     <div className="glass w-full max-w-md rounded-2xl p-5 shadow-[0_20px_50px_-20px_rgba(38,34,29,0.25)] sm:rounded-3xl sm:p-6">
       <AnimatePresence mode="wait">
         <motion.div
-          key={loading ? "loading" : `${dateISO}-${state}-${religion}-${status}`}
+          key={loading ? "loading" : `${dateISO}-${state}-${religion}-${region}-${status}`}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
@@ -23,7 +23,7 @@ export default function TodayStatus({ dateISO, state, religion, dayInfo, loading
               <span className={`text-sm font-bold tracking-wider ${meta.textClass}`}>{meta.label}</span>
             </div>
             <span className="rounded-full bg-charcoal/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-charcoal-soft">
-              {scopeLabel({ state, religion })}
+              {scopeLabel({ state, religion, region })}
             </span>
           </div>
           <p className="mt-2 text-lg font-semibold text-charcoal">{formatLong(dateISO)}</p>

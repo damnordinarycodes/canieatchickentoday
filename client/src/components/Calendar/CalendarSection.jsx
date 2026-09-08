@@ -11,10 +11,10 @@ const LEGEND = [
   { dot: "bg-accent-red", label: "Not today" },
 ];
 
-export default function CalendarSection({ selectedDate, state, religion, onSelect }) {
+export default function CalendarSection({ selectedDate, state, religion, region, onSelect }) {
   const initial = parseISODate(selectedDate);
   const [view, setView] = useState({ year: initial.getFullYear(), month: initial.getMonth() + 1 });
-  const { days, loading } = useMonthDays(view.year, view.month, state, religion);
+  const { days, loading } = useMonthDays(view.year, view.month, state, religion, region);
 
   const goPrev = () =>
     setView((v) => (v.month === 1 ? { year: v.year - 1, month: 12 } : { year: v.year, month: v.month - 1 }));
@@ -29,7 +29,15 @@ export default function CalendarSection({ selectedDate, state, religion, onSelec
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="glass rounded-3xl p-4 shadow-[0_20px_50px_-25px_rgba(38,34,29,0.25)] sm:p-6 lg:p-8"
     >
-      <CalendarHeader year={view.year} month={view.month} state={state} religion={religion} onPrev={goPrev} onNext={goNext} />
+      <CalendarHeader
+        year={view.year}
+        month={view.month}
+        state={state}
+        religion={religion}
+        region={region}
+        onPrev={goPrev}
+        onNext={goNext}
+      />
       <CalendarGrid
         year={view.year}
         month={view.month}

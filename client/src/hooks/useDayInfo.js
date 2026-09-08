@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchDay } from "../api";
 
-export function useDayInfo(dateISO, state, religion) {
+export function useDayInfo(dateISO, state, religion, region) {
   const [dayInfo, setDayInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const cache = useRef(new Map());
 
   useEffect(() => {
     let cancelled = false;
-    const cacheKey = `${dateISO}|${state || ""}|${religion || ""}`;
+    const cacheKey = `${dateISO}|${state || ""}|${religion || ""}|${region || ""}`;
 
     if (cache.current.has(cacheKey)) {
       setDayInfo(cache.current.get(cacheKey));
@@ -17,7 +17,7 @@ export function useDayInfo(dateISO, state, religion) {
     }
 
     setLoading(true);
-    fetchDay(dateISO, state, religion)
+    fetchDay(dateISO, state, religion, region)
       .then((data) => {
         if (cancelled) return;
         cache.current.set(cacheKey, data);
@@ -33,7 +33,7 @@ export function useDayInfo(dateISO, state, religion) {
     return () => {
       cancelled = true;
     };
-  }, [dateISO, state, religion]);
+  }, [dateISO, state, religion, region]);
 
   return { dayInfo, loading };
 }

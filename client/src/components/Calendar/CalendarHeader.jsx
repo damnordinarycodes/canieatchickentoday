@@ -1,7 +1,7 @@
 import { MONTH_NAMES } from "../../utils/date";
 import { scopeLabel } from "../../utils/scope";
 
-export default function CalendarHeader({ year, month, state, religion, onPrev, onNext }) {
+export default function CalendarHeader({ year, month, state, religion, region, onPrev, onNext }) {
   return (
     <div className="mb-6 flex items-center justify-between">
       <div>
@@ -9,7 +9,7 @@ export default function CalendarHeader({ year, month, state, religion, onPrev, o
           {MONTH_NAMES[month - 1]} {year}
         </h3>
         <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-charcoal-soft/60">
-          {scopeLabel({ state, religion })}
+          {scopeLabel({ state, religion, region })}
         </p>
       </div>
       <div className="flex items-center gap-2">

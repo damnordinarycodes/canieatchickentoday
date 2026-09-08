@@ -1,6 +1,7 @@
 import HeroText from "./HeroText";
 import StateSelector from "./StateSelector";
 import ReligionSelector from "./ReligionSelector";
+import RegionSelector from "./RegionSelector";
 import TodayStatus from "./TodayStatus";
 import ChickenViewer from "../ChickenViewer/ChickenViewer";
 
@@ -10,6 +11,8 @@ export default function Hero({
   onStateChange,
   religion,
   onReligionChange,
+  region,
+  onRegionChange,
   dayInfo,
   loading,
   onCheckToday,
@@ -25,7 +28,15 @@ export default function Hero({
           <StateSelector state={state} onChange={onStateChange} />
           <ReligionSelector religion={religion} onChange={onReligionChange} />
         </div>
-        <TodayStatus dateISO={dateISO} state={state} religion={religion} dayInfo={dayInfo} loading={loading} />
+        <RegionSelector region={region} onChange={onRegionChange} />
+        <TodayStatus
+          dateISO={dateISO}
+          state={state}
+          religion={religion}
+          region={region}
+          dayInfo={dayInfo}
+          loading={loading}
+        />
       </div>
       <ChickenViewer status={dayInfo?.status || "allowed"} dateISO={dateISO} />
     </section>

@@ -92,6 +92,26 @@ so the frontend doesn't care which lens is active. The state and religion
 selectors are mutually exclusive — picking one clears the other, since the
 data doesn't support combining them (e.g. "Jain customs in Maharashtra").
 
+## Region selector (location-based)
+
+A third lens, `Hero/RegionSelector.jsx`: North / South / East / West India.
+Unlike the State and Religion selectors it can be filled in automatically —
+its "Use my location" button asks the browser for geolocation permission,
+sends the coordinates to `GET /api/region?lat=&lon=`, which reverse-geocodes
+them via OpenStreetMap's free Nominatim API (no key needed) to find the
+Indian state, then maps that state to a region
+(`server/src/data/regionCalendar.js`). It can also just be picked by hand
+from the dropdown, no location permission required.
+
+India doesn't split cleanly into 4 zones — this folds the Northeast into
+"East" and the Central states into "North"/"West" — so it's a broad,
+approximate grouping, not an official zonal classification. To avoid one
+state's local ban flagging an entire region, an occasion (ban, custom, or
+weekly pattern) only counts for a region if **at least half its states**
+observe it; the State selector remains the precise, single-state answer.
+Region is mutually exclusive with State and Religion, same as those two are
+with each other.
+
 ## 3D chicken
 
 `client/src/components/ChickenViewer/` — a real low-poly 3D chicken model

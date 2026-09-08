@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { fetchMonth } from "../api";
 
-export function useMonthDays(year, month, state, religion) {
+export function useMonthDays(year, month, state, religion, region) {
   const [days, setDays] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    fetchMonth(year, month, state, religion)
+    fetchMonth(year, month, state, religion, region)
       .then((data) => {
         if (!cancelled) setDays(data);
       })
@@ -21,7 +21,7 @@ export function useMonthDays(year, month, state, religion) {
     return () => {
       cancelled = true;
     };
-  }, [year, month, state, religion]);
+  }, [year, month, state, religion, region]);
 
   return { days, loading };
 }
