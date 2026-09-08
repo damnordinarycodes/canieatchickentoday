@@ -129,12 +129,24 @@ router.get("/:year/:month", async (req, res, next) => {
       return res.json(results);
     }
 
+    const daysInMonth = new Date(year, month, 0).getDate();
     const prefix = `${year}-${pad(month)}`;
-    const days = await CalendarDay.find({ date: { $regex: `^${prefix}` } })
+    const stored = await CalendarDay.find({ date: { $regex: `^${prefix}` } })
       .sort({ date: 1 })
       .select(DAY_FIELDS);
 
-    res.json(days);
+    // The default calendar is only precomputed for 2026-2027. Outside that
+    // range (or any gap in it) fall back to computing each day on the fly —
+    // same as the single-date route already does — instead of returning a
+    // partial/empty month.
+    if (stored.length === daysInMonth) {
+      return res.json(stored);
+    }
+
+    const results = Array.from({ length: daysInMonth }, (_, i) =>
+      computeDayInfo(`${year}-${pad(month)}-${pad(i + 1)}`)
+    );
+    res.json(results);
   } catch (err) {
     next(err);
   }

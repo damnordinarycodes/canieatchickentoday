@@ -29,7 +29,12 @@ export async function fetchMonth(year, month, state, religion, region) {
 // via the server (which proxies OpenStreetMap Nominatim).
 export async function fetchRegionFromCoords(lat, lon) {
   const res = await fetch(`/api/region?lat=${lat}&lon=${lon}`);
-  const data = await res.json();
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error("Couldn't determine your region — try again.");
+  }
   if (!res.ok) throw new Error(data.error || "Failed to determine region from location");
   return data;
 }

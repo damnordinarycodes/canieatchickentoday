@@ -53,14 +53,28 @@ router.get("/region", async (req, res, next) => {
       return res.status(400).json({ error: "lat and lon query params are required numbers" });
     }
 
-    const geoRes = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=5&addressdetails=1`,
-      { headers: { "User-Agent": "chicken-day-app/1.0 (reverse geocoding for a regional chicken-day calendar)" } }
-    );
+    let geoRes;
+    try {
+      geoRes = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=5&addressdetails=1`,
+        {
+          headers: { "User-Agent": "chicken-day-app/1.0 (reverse geocoding for a regional chicken-day calendar)" },
+          signal: AbortSignal.timeout(8000),
+        }
+      );
+    } catch {
+      return res.status(504).json({ error: "Reverse geocoding lookup timed out — try again" });
+    }
     if (!geoRes.ok) {
       return res.status(502).json({ error: "Reverse geocoding lookup failed" });
     }
-    const geo = await geoRes.json();
+
+    let geo;
+    try {
+      geo = await geoRes.json();
+    } catch {
+      return res.status(502).json({ error: "Reverse geocoding returned an unreadable response — try again" });
+    }
     const stateName = geo?.address?.state;
     const countryCode = geo?.address?.country_code;
 
