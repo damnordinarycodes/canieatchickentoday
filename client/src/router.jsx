@@ -6,9 +6,23 @@ import { useEffect, useState } from "react";
 const NAVIGATE_EVENT = "app:navigate";
 
 export function navigate(path) {
+  const [targetPath, hash] = path.split("#");
+  const normalizedTarget = targetPath || "/";
+  const samePage = normalizedTarget === window.location.pathname;
+
   if (path !== window.location.pathname + window.location.hash) {
     window.history.pushState(null, "", path);
     window.dispatchEvent(new Event(NAVIGATE_EVENT));
+  }
+
+  // A pathname change re-renders a new page component, whose own mount
+  // effect (see HomePage) scrolls to the hash. Same-page hash changes don't
+  // remount anything, and pushState alone never triggers the browser's
+  // native scroll-to-anchor (that only happens for real anchor clicks or a
+  // direct location.hash assignment) — so handle that case here.
+  if (samePage && hash) {
+    const el = document.getElementById(hash);
+    if (el) requestAnimationFrame(() => el.scrollIntoView());
   }
 }
 

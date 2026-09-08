@@ -137,6 +137,40 @@ performance. The loader is structured so the model can be swapped for a
 different `.glb` later — see `MODEL_URL` / `BASE_SCALE` / `RECENTER` in
 `ChickenModel.jsx`.
 
+## Mobile navigation — the floating 3D nav
+
+Below the `sm` breakpoint (640px), `Navbar`'s inline links are replaced by
+`Mobile3DNavbar` (`client/src/components/Mobile3DNavbar/`) — a floating
+glass orb near the bottom of the screen that expands into four 3D cards
+(Today/Calendar/Towns/About) on tap, built with CSS 3D transforms
+(`perspective`, `translateZ`, `rotateX/Y`, `transform-style: preserve-3d`)
+driven by Framer Motion springs rather than WebGL, since a handful of small
+cards don't need a 3D engine.
+
+- **`NavCore`** owns the interaction: dragging a finger across the open nav
+  tilts the whole group toward it, nudges nearby cards with a small magnetic
+  pull, and brightens whichever card is closest — all via `transform`/
+  `opacity` only (never `width`/`height`/`top`/`left`, and the one pulsing
+  "active" glow animates opacity on a static-bordered overlay rather than
+  animating `box-shadow` itself).
+- **`useActiveSection`** drives the current-section highlight via
+  `IntersectionObserver`, but deliberately doesn't trust the ratio it
+  reports or any single element's cached snapshot — a short section (like
+  the collapsed Towns accordion) can be fully on-screen and still lose a
+  naive ratio comparison to a taller neighbor merely peeking in beneath it,
+  and a smooth-scroll pass-through leaves stale per-element snapshots with
+  no further callback to refresh them. Instead the observer is just the
+  "recheck now" signal; each check re-reads every section's live position
+  and picks whichever most recently crossed the top of the viewport (with a
+  bottom-of-page special case, since a short final section often can't
+  physically scroll far enough to satisfy that rule on its own).
+- Respects `prefers-reduced-motion` (falls back to a simple fade/scale, no
+  tilt or magnetic pull), locks body scroll and dims the page behind a
+  backdrop while open, and closes on an outside tap, `Escape`, or selecting
+  an item.
+- Fully data-driven from `navConfig.js` — no per-item logic hardcoded
+  elsewhere.
+
 ## Pre-launch hardening
 
 A pass over the usual pre-launch checklist:
