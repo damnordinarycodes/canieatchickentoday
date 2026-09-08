@@ -14,7 +14,14 @@ export default function Footer() {
           <Link href="/privacy" className="hover:text-charcoal">Privacy</Link>
           <Link href="/terms" className="hover:text-charcoal">Terms</Link>
           <Link href="/#about" className="hover:text-charcoal">About</Link>
-          <a href="mailto:abhinavsingh2621@gmail.com" className="hover:text-charcoal">Contact</a>
+          <a
+            href="https://github.com/damnordinarycodes/canieatchickentoday/issues"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-charcoal"
+          >
+            Contact
+          </a>
         </div>
         <p className="text-[11px] text-charcoal-soft/80">Built with MERN + Three.js</p>
       </div>

@@ -62,8 +62,11 @@ export default function TermsPage() {
 
       <h2>Contact</h2>
       <p>
-        Questions, corrections, or removal requests: email{" "}
-        <a href="mailto:abhinavsingh2621@gmail.com">abhinavsingh2621@gmail.com</a>.
+        Questions, corrections, or removal requests: open an issue on{" "}
+        <a href="https://github.com/damnordinarycodes/canieatchickentoday/issues" target="_blank" rel="noreferrer">
+          GitHub
+        </a>
+        .
       </p>
     </LegalPage>
   );

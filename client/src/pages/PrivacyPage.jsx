@@ -70,8 +70,11 @@ export default function PrivacyPage() {
 
       <h2>Contact</h2>
       <p>
-        Questions about this policy? Email{" "}
-        <a href="mailto:abhinavsingh2621@gmail.com">abhinavsingh2621@gmail.com</a>.
+        Questions about this policy? Open an issue on{" "}
+        <a href="https://github.com/damnordinarycodes/canieatchickentoday/issues" target="_blank" rel="noreferrer">
+          GitHub
+        </a>
+        .
       </p>
     </LegalPage>
   );
