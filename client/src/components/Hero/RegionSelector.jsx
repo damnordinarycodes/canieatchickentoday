@@ -11,6 +11,7 @@ const REGIONS = [
 export default function RegionSelector({ region, onChange }) {
   const [locating, setLocating] = useState(false);
   const [error, setError] = useState("");
+  const [approximate, setApproximate] = useState(false);
 
   const useMyLocation = () => {
     if (!navigator.geolocation) {
@@ -18,12 +19,14 @@ export default function RegionSelector({ region, onChange }) {
       return;
     }
     setError("");
+    setApproximate(false);
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         try {
-          const { region: detected } = await fetchRegionFromCoords(coords.latitude, coords.longitude);
-          onChange(detected);
+          const result = await fetchRegionFromCoords(coords.latitude, coords.longitude);
+          onChange(result.region);
+          setApproximate(!!result.approximate);
         } catch (err) {
           setError(err.message || "Couldn't determine your region.");
         } finally {
@@ -65,6 +68,9 @@ export default function RegionSelector({ region, onChange }) {
         </button>
       </div>
       {error && <p className="px-1 text-xs text-accent-red">{error}</p>}
+      {!error && approximate && (
+        <p className="px-1 text-xs text-charcoal-soft/60">Estimated from your coordinates (precise lookup was unavailable).</p>
+      )}
     </div>
   );
 }

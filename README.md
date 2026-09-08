@@ -103,6 +103,16 @@ Indian state, then maps that state to a region
 (`server/src/data/regionCalendar.js`). It can also just be picked by hand
 from the dropdown, no location permission required.
 
+Nominatim is a free third-party service and some networks block or
+rate-limit it outright — that shouldn't break the feature, so if it's
+unreachable (timeout, error, or an unreadable response) `/api/region` falls
+back to `regionFromCoords()`, a dependency-free nearest-city approximation
+(a hardcoded list of ~40 major Indian city coordinates, each tagged with its
+region; the closest one wins). The response marks this with
+`approximate: true`, and the UI shows a small "estimated" note when it
+happens. Coordinates outside a rough India bounding box still return a clear
+"doesn't appear to be in India" error either way.
+
 India doesn't split cleanly into 4 zones — this folds the Northeast into
 "East" and the Central states into "North"/"West" — so it's a broad,
 approximate grouping, not an official zonal classification. To avoid one
