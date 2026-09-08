@@ -123,9 +123,8 @@ service, one database, no separate static site and no CORS to worry about.
    git commit -m "Initial commit"
    gh repo create --source=. --public --push   # or create on github.com and add a remote
    ```
-2. **Edit `.do/app.yaml`** — replace `YOUR_GITHUB_USERNAME/YOUR_REPO_NAME` under
-   `services[0].github.repo` with your actual `owner/repo`, and adjust
-   `branch` if you're not deploying from `main`.
+2. `.do/app.yaml` already points at `damnordinarycodes/canieatchickentoday`,
+   branch `main` — update it if you deploy from a fork or different branch.
 3. **Create the app** from that spec, either via the dashboard
    ("Create App" → "Edit App Spec" → paste `.do/app.yaml`'s contents) or with
    [`doctl`](https://docs.digitalocean.com/reference/doctl/):
