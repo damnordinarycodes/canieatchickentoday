@@ -67,9 +67,9 @@ export default function RegionSelector({ region, onChange }) {
           {locating ? "Locating…" : "Use my location"}
         </button>
       </div>
-      {error && <p className="px-1 text-xs text-accent-red">{error}</p>}
+      {error && <p className="px-1 text-xs text-accent-red-dark">{error}</p>}
       {!error && approximate && (
-        <p className="px-1 text-xs text-charcoal-soft/60">Estimated from your coordinates (precise lookup was unavailable).</p>
+        <p className="px-1 text-xs text-charcoal-soft/80">Estimated from your coordinates (precise lookup was unavailable).</p>
       )}
     </div>
   );

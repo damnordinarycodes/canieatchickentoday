@@ -137,6 +137,63 @@ performance. The loader is structured so the model can be swapped for a
 different `.glb` later — see `MODEL_URL` / `BASE_SCALE` / `RECENTER` in
 `ChickenModel.jsx`.
 
+## Pre-launch hardening
+
+A pass over the usual pre-launch checklist:
+
+- **Real pages, not anchors** — `/privacy` and `/terms` are genuine routes via
+  a minimal hand-rolled client-side router (`router.jsx` — no dependency,
+  this app only needs 3 routes + a 404). Unknown paths render a branded
+  `NotFoundPage` **and** get a real HTTP 404 status in production
+  (`server/src/index.js`), not a "soft 404" that search engines would index
+  as if it were real content.
+- **HTTPS enforced** — in production, any plain-HTTP request is redirected
+  (308) to HTTPS, plus an HSTS header, `X-Content-Type-Options`,
+  `X-Frame-Options`, and `Referrer-Policy`. Works behind a reverse proxy
+  (Caddy, an AWS/DO load balancer) via `trust proxy` + `X-Forwarded-Proto`.
+- **No secrets in the frontend** — the client never reads `process.env` or
+  ships an API key; the one third-party call (reverse geocoding) is proxied
+  through the server. Verified by grepping the client for `import.meta.env` /
+  `process.env` usage.
+- **Cookie/consent banner** — honest about what actually happens (no
+  tracking cookies, a local-storage preference, geolocation only on request)
+  rather than boilerplate GDPR text for cookies this app doesn't set.
+  `hooks/useConsent.js` + `ConsentBanner.jsx`; the layout reserves space for
+  it so it never covers content underneath (a real bug caught in testing —
+  it was intercepting clicks on the footer's links).
+- **Meta tags + social preview** — title/description, canonical, Open
+  Graph + Twitter Card tags, and a generated `og-image.jpg` (1200×630,
+  compressed via Chromium's own JPEG encoder — 41 KB) in `client/index.html`.
+  **Update the placeholder domain** (`chickenday.example.com`) once deployed.
+  `usePageMeta.js` keeps the tab title/description accurate on `/privacy` and
+  `/terms` too.
+- **Favicon set** — `favicon.svg` (on-brand, was previously an unrelated
+  leftover template icon), `favicon.ico`, `apple-touch-icon.png`.
+- **`sitemap.xml` / `robots.txt`** — served dynamically from the request's
+  own host (`GET /sitemap.xml`, `GET /robots.txt`), so there's no hardcoded
+  domain to keep in sync after deploying.
+- **Color contrast** — audited every text/background pairing against WCAG AA
+  (4.5:1) programmatically; fixed real failures (as low as 1.9:1) by
+  darkening `--color-soft-orange-dark` / `--color-muted-green-dark` and
+  standardizing the various `text-charcoal-soft/50` `/60` `/70` opacity
+  levels used for fine print to a single passing `/80`.
+- **Page load** — the 3D chicken (three.js + `@react-three/fiber`/`drei`,
+  the single largest dependency by far) is code-split via `React.lazy` +
+  `Suspense` instead of shipping in the initial bundle; the main bundle
+  dropped from ~1.3 MB to ~352 KB. Also removed several unused leftover
+  assets from the original Vite template (`hero.png`, `react.svg`,
+  `vite.svg`, `icons.svg` — none were ever imported anywhere).
+- **Analytics — opt-in, not wired to anything by default**:
+  `client/src/analytics.js` only loads a script if `VITE_PLAUSIBLE_DOMAIN` is
+  set (see `client/.env.example`); Plausible is cookieless, so it doesn't
+  need its own consent toggle. Ships with **no analytics at all** until you
+  set that variable.
+- **Forms / spam protection** — not applicable: the app has no forms. The
+  footer's "Contact" is a plain `mailto:` link.
+- **One clear CTA** — the Hero already had this right: one filled primary
+  button ("Check Today's Day") and one outline secondary ("View Calendar"),
+  not several competing calls to action.
+
 ## Deploying to DigitalOcean
 
 The app deploys as a **single App Platform service**: in production, Express

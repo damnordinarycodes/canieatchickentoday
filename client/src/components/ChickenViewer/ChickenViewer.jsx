@@ -66,7 +66,7 @@ export default function ChickenViewer({ status = "allowed", dateISO }) {
         )}
       </AnimatePresence>
 
-      <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 text-[11px] font-medium tracking-wide text-charcoal-soft/50">
+      <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 text-[11px] font-medium tracking-wide text-charcoal-soft/80">
         tap the chicken
       </p>
     </div>

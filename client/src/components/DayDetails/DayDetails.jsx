@@ -39,7 +39,7 @@ export default function DayDetails({ dateISO, state, religion, region, dayInfo, 
               {scopeLabel({ state, religion, region })}
             </span>
           </div>
-          <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-charcoal-soft/70">
+          <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-charcoal-soft/80">
             {formatLong(dateISO)}
           </p>
 
@@ -51,7 +51,7 @@ export default function DayDetails({ dateISO, state, religion, region, dayInfo, 
             {loading ? "Loading…" : dayInfo?.description}
           </p>
 
-          <p className="mt-5 text-xs italic text-charcoal-soft/60">{disclaimer({ state, religion, region })}</p>
+          <p className="mt-5 text-xs italic text-charcoal-soft/80">{disclaimer({ state, religion, region })}</p>
         </motion.div>
       </AnimatePresence>
     </div>

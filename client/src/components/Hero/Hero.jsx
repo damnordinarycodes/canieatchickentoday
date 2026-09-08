@@ -1,9 +1,15 @@
+import { lazy, Suspense } from "react";
 import HeroText from "./HeroText";
 import StateSelector from "./StateSelector";
 import ReligionSelector from "./ReligionSelector";
 import RegionSelector from "./RegionSelector";
 import TodayStatus from "./TodayStatus";
-import ChickenViewer from "../ChickenViewer/ChickenViewer";
+import ChickenFallback from "../ChickenViewer/ChickenFallback";
+
+// Three.js + @react-three/fiber/drei are the single biggest chunk of the
+// bundle — code-split them out so the initial page load (and the meta tags,
+// first paint) doesn't wait on a 3D engine nobody's looked at yet.
+const ChickenViewer = lazy(() => import("../ChickenViewer/ChickenViewer"));
 
 export default function Hero({
   dateISO,
@@ -38,7 +44,15 @@ export default function Hero({
           loading={loading}
         />
       </div>
-      <ChickenViewer status={dayInfo?.status || "allowed"} dateISO={dateISO} />
+      <Suspense
+        fallback={
+          <div className="h-[300px] w-full sm:h-[380px] md:h-[420px] lg:h-[540px]">
+            <ChickenFallback status={dayInfo?.status || "allowed"} />
+          </div>
+        }
+      >
+        <ChickenViewer status={dayInfo?.status || "allowed"} dateISO={dateISO} />
+      </Suspense>
     </section>
   );
 }

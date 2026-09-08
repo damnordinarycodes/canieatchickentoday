@@ -8,7 +8,7 @@ export default function CalendarHeader({ year, month, state, religion, region, o
         <h3 className="text-2xl font-extrabold tracking-tight text-charcoal">
           {MONTH_NAMES[month - 1]} {year}
         </h3>
-        <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-charcoal-soft/60">
+        <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-charcoal-soft/80">
           {scopeLabel({ state, religion, region })}
         </p>
       </div>

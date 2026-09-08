@@ -57,7 +57,7 @@ export default function TownsSection() {
                     <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent-red" />
                     <div>
                       <p className="text-sm font-bold text-charcoal">{t.town}</p>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-charcoal-soft/60">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-charcoal-soft/80">
                         {t.state}
                       </p>
                       <p className="mt-1 text-xs leading-relaxed text-charcoal-soft">{t.status}</p>

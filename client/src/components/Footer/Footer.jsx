@@ -1,3 +1,5 @@
+import { Link } from "../../router";
+
 export default function Footer() {
   return (
     <footer className="border-t border-black/5 bg-cream-dark/60">
@@ -9,13 +11,14 @@ export default function Footer() {
           <p className="mt-1 text-xs text-charcoal-soft">Know the day. Choose your meal.</p>
         </div>
         <div className="flex items-center gap-5 text-xs font-medium text-charcoal-soft">
-          <a href="#" className="hover:text-charcoal">Privacy</a>
-          <a href="#about" className="hover:text-charcoal">About</a>
-          <a href="#" className="hover:text-charcoal">Contact</a>
+          <Link href="/privacy" className="hover:text-charcoal">Privacy</Link>
+          <Link href="/terms" className="hover:text-charcoal">Terms</Link>
+          <Link href="/#about" className="hover:text-charcoal">About</Link>
+          <a href="mailto:abhinavsingh2621@gmail.com" className="hover:text-charcoal">Contact</a>
         </div>
-        <p className="text-[11px] text-charcoal-soft/60">Built with MERN + Three.js</p>
+        <p className="text-[11px] text-charcoal-soft/80">Built with MERN + Three.js</p>
       </div>
-      <p className="border-t border-black/5 px-5 py-3 text-center text-[10px] text-charcoal-soft/50 sm:px-6">
+      <p className="border-t border-black/5 px-5 py-3 text-center text-[10px] text-charcoal-soft/80 sm:px-6">
         "Chicken" 3D model by{" "}
         <a href="https://poly.pizza/m/87XZ2kDlAhh" target="_blank" rel="noreferrer" className="underline hover:text-charcoal-soft">
           Maf'j Alvarez

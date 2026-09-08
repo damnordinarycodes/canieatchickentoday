@@ -10,7 +10,7 @@ export default function CalendarGrid({ year, month, days, selectedDate, onSelect
 
   return (
     <div>
-      <div className="mb-2 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase tracking-wide text-charcoal-soft/70 sm:gap-2 sm:text-xs">
+      <div className="mb-2 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase tracking-wide text-charcoal-soft/80 sm:gap-2 sm:text-xs">
         {WEEKDAY_LABELS.map((w) => (
           <span key={w}>{w}</span>
         ))}

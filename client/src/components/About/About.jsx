@@ -15,7 +15,7 @@ export default function About() {
         A simple way to check whether today is considered a chicken-friendly day according to the selected
         religious calendar or tradition.
       </p>
-      <p className="mx-auto mt-6 max-w-xl text-xs leading-relaxed text-charcoal-soft/70">
+      <p className="mx-auto mt-6 max-w-xl text-xs leading-relaxed text-charcoal-soft/80">
         Religious practices vary between families, communities and traditions. This tool is informational and
         should not be treated as religious authority.
       </p>
