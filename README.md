@@ -145,6 +145,61 @@ service, one database, no separate static site and no CORS to worry about.
 is ever missing in production, the server fails fast at boot instead of
 silently running on a throwaway database.
 
+## Deploying to a VPS (Docker)
+
+For any plain VPS (a DigitalOcean Droplet, Hetzner, Linode, a bare EC2 box,
+etc. — anywhere you SSH in yourself instead of using a managed platform),
+the repo is Docker-based: `Dockerfile` builds the client and runs the same
+single Express service from the App Platform setup above, and
+`docker-compose.yml` adds a `mongo` container and a `caddy` container in
+front of it for automatic HTTPS.
+
+**On your machine**, commit and push these files (already in the repo):
+`Dockerfile`, `.dockerignore`, `docker-compose.yml`, `Caddyfile`.
+
+**On the VPS:**
+
+1. Point your domain's `A` record at the VPS's IP (needed for Caddy to get a
+   free Let's Encrypt certificate). Skip this if you don't have a domain yet
+   — see the `Caddyfile` for the no-domain/plain-HTTP fallback.
+2. Install Docker + the Compose plugin (Ubuntu):
+   ```bash
+   curl -fsSL https://get.docker.com | sh
+   sudo usermod -aG docker $USER   # log out/in after this
+   ```
+3. Open the firewall for SSH, HTTP, and HTTPS only:
+   ```bash
+   sudo ufw allow OpenSSH
+   sudo ufw allow 80,443/tcp
+   sudo ufw enable
+   ```
+4. Clone the repo and edit `Caddyfile` — replace `your-domain.com` with your
+   real domain (or switch to the `:80` fallback block if you have no domain):
+   ```bash
+   git clone https://github.com/damnordinarycodes/canieatchickentoday.git
+   cd canieatchickentoday
+   nano Caddyfile
+   ```
+5. Build and start everything:
+   ```bash
+   docker compose up -d --build
+   ```
+   This builds the app image, starts MongoDB (with a persistent
+   `mongo-data` volume — the database survives container restarts/rebuilds),
+   and starts Caddy, which automatically requests and renews the TLS
+   certificate and reverse-proxies to the app.
+6. To deploy an update later:
+   ```bash
+   git pull
+   docker compose up -d --build
+   ```
+
+No `MONGODB_URI` needs setting by hand here — `docker-compose.yml` points
+the app straight at the `mongo` container. The same production guard in
+`server/src/db.js` (fail fast instead of falling back to an in-memory
+database) still applies, so a Compose misconfiguration surfaces immediately
+in `docker compose logs app` rather than silently losing data on restart.
+
 ## Underlying per-state data
 
 `/api/check`, `/api/states`, and `/api/towns` are the original per-state/date

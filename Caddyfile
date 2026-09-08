@@ -1,0 +1,9 @@
+your-domain.com {
+	reverse_proxy app:5050
+}
+
+# No domain yet? Comment out the block above and use this instead —
+# it serves plain HTTP on the VPS's IP with no TLS:
+# :80 {
+# 	reverse_proxy app:5050
+# }
