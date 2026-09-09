@@ -88,9 +88,10 @@ export default function NavCore({ items, open, onToggle, activeId, onSelect, red
         onClick={onToggle}
         aria-expanded={open}
         aria-label={open ? "Close navigation" : "Open navigation"}
-        className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full"
+        className="relative z-10 flex h-16 w-14 items-center justify-center"
         style={{
           transformStyle: "preserve-3d",
+          borderRadius: "50% 50% 50% 50% / 62% 62% 38% 38%",
           backgroundColor: "color-mix(in srgb, #1a1714 74%, transparent)",
           backdropFilter: "blur(18px)",
           WebkitBackdropFilter: "blur(18px)",
@@ -104,31 +105,33 @@ export default function NavCore({ items, open, onToggle, activeId, onSelect, red
             ? { scale: open ? 0.86 : 1 }
             : open
               ? { scale: 0.86, y: 0, rotateZ: 0 }
-              : { scale: [1, 1.04, 1], y: [0, -5, 0], rotateZ: [0, 5, 0, -5, 0] }
+              : { scale: [1, 1.03, 1], y: [0, -3, 0], rotateZ: [0, -4, 0, 4, 0] }
         }
         transition={reduceMotion || open ? OPEN_SPRING : IDLE_FLOAT}
       >
-        <OrbGlyph open={open} reduceMotion={reduceMotion} />
+        <EggCrackGlyph open={open} reduceMotion={reduceMotion} />
       </motion.button>
     </div>
   );
 }
 
-function OrbGlyph({ open, reduceMotion }) {
+// A hairline crack, barely visible at rest — an affordance hinting the egg
+// can be cracked open — that flashes bright the instant it's tapped and
+// stays lit while open, then settles back to a faint line when closed.
+function EggCrackGlyph({ open, reduceMotion }) {
   return (
-    <motion.svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      animate={reduceMotion ? {} : { rotate: open ? 45 : 0 }}
-      transition={OPEN_SPRING}
-    >
-      <circle cx="12" cy="4" r="2" fill="currentColor" opacity={open ? 0.45 : 1} />
-      <circle cx="20" cy="12" r="2" fill="currentColor" opacity={open ? 0.45 : 1} />
-      <circle cx="12" cy="20" r="2" fill="currentColor" opacity={open ? 0.45 : 1} />
-      <circle cx="4" cy="12" r="2" fill="currentColor" opacity={open ? 0.45 : 1} />
-      <circle cx="12" cy="12" r="2.4" fill="currentColor" />
-    </motion.svg>
+    <svg width="20" height="26" viewBox="0 0 20 26" fill="none">
+      <motion.path
+        d="M10 2 L13.5 9 L7 12.5 L14 17 L8.5 24"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        initial={false}
+        animate={reduceMotion ? { opacity: open ? 0.9 : 0.32 } : { opacity: open ? [0.32, 1, 0.9] : 0.32 }}
+        transition={{ duration: reduceMotion ? 0.15 : 0.42, ease: "easeOut" }}
+      />
+    </svg>
   );
 }

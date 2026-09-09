@@ -141,11 +141,13 @@ different `.glb` later — see `MODEL_URL` / `BASE_SCALE` / `RECENTER` in
 
 Below the `sm` breakpoint (640px), `Navbar`'s inline links are replaced by
 `Mobile3DNavbar` (`client/src/components/Mobile3DNavbar/`) — a floating
-glass orb near the bottom of the screen that expands into four 3D cards
-(Today/Calendar/Towns/About) on tap, built with CSS 3D transforms
-(`perspective`, `translateZ`, `rotateX/Y`, `transform-style: preserve-3d`)
-driven by Framer Motion springs rather than WebGL, since a handful of small
-cards don't need a 3D engine.
+glass egg near the bottom of the screen, on-theme with the rest of the app,
+that cracks open into four 3D cards (Today/Calendar/Towns/About) on tap.
+A hairline crack is faintly visible at rest as an affordance, flashes
+bright the instant it's tapped, and stays lit while open. Built with CSS 3D
+transforms (`perspective`, `translateZ`, `rotateX/Y`,
+`transform-style: preserve-3d`) driven by Framer Motion springs rather than
+WebGL, since a handful of small cards don't need a 3D engine.
 
 - **`NavCore`** owns the interaction: dragging a finger across the open nav
   tilts the whole group toward it, nudges nearby cards with a small magnetic
