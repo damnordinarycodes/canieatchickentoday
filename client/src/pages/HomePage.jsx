@@ -77,7 +77,7 @@ export default function HomePage() {
   useEffect(() => {
     if (window.location.hash) {
       const el = document.querySelector(window.location.hash);
-      if (el) requestAnimationFrame(() => el.scrollIntoView());
+      if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: "auto", block: "start" }));
     }
   }, []);
 
@@ -96,7 +96,7 @@ export default function HomePage() {
         onCheckToday={() => setSelectedDate(todayISO())}
       />
 
-      <section id="calendar" className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-5 py-8 sm:px-6 sm:py-10 lg:grid-cols-[1.4fr_1fr]">
+      <section id="calendar" className="mx-auto grid max-w-6xl scroll-mt-20 grid-cols-1 gap-6 px-5 py-8 sm:px-6 sm:py-10 lg:grid-cols-[1.4fr_1fr]">
         <CalendarSection
           selectedDate={selectedDate}
           state={selectedState}
