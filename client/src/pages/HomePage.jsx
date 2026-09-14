@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Hero from "../components/Hero/Hero";
 import CalendarSection from "../components/Calendar/CalendarSection";
 import DayDetails from "../components/DayDetails/DayDetails";
@@ -29,6 +29,7 @@ export default function HomePage() {
   const [selectedState, setSelectedState] = useState(() => getInitialParam("state"));
   const [selectedReligion, setSelectedReligion] = useState(() => getInitialParam("religion"));
   const [selectedRegion, setSelectedRegion] = useState(() => getInitialParam("region"));
+  const hasMounted = useRef(false);
   const { dayInfo, loading } = useDayInfo(selectedDate, selectedState, selectedReligion, selectedRegion);
 
   // State, religion and region are three different lenses on the same
@@ -70,6 +71,19 @@ export default function HomePage() {
     else url.searchParams.delete("region");
     window.history.replaceState(null, "", url);
   }, [selectedDate, selectedState, selectedReligion, selectedRegion]);
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+    if (selectedReligion) {
+      requestAnimationFrame(() => {
+        const calendar = document.querySelector("#calendar");
+        if (calendar) window.scrollTo({ top: calendar.offsetTop - 80, behavior: "auto" });
+      });
+    }
+  }, [selectedReligion]);
 
   // If we arrived here via a same-page nav link (e.g. "/#calendar" clicked
   // from /privacy), scroll to that section once mounted — a client-rendered
