@@ -10,10 +10,10 @@ export default function About() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="mx-auto max-w-2xl px-5 py-14 text-center sm:px-6 sm:py-20"
     >
-      <h2 className="text-2xl font-extrabold tracking-tight text-charcoal">Why does this exist?</h2>
+      <h2 className="text-2xl font-extrabold tracking-tight text-charcoal">Can I eat chicken today?</h2>
       <p className="mt-4 text-base text-charcoal-soft">
-        A simple way to check whether today is considered a chicken-friendly day according to the selected
-        religious calendar or tradition.
+        Chicken Day checks the date against widely observed chicken and meat restrictions in India. Choose a
+        state, religion, or region for a more specific answer.
       </p>
       <p className="mx-auto mt-6 max-w-xl text-xs leading-relaxed text-charcoal-soft/80">
         Religious practices vary between families, communities and traditions. This tool is informational and

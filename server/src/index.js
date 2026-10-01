@@ -41,7 +41,7 @@ app.use(express.json());
 app.use("/api", apiRouter);
 app.use("/api/calendar", calendarRouter);
 
-const KNOWN_ROUTES = ["/", "/privacy", "/terms"];
+const KNOWN_ROUTES = ["/", "/check", "/privacy", "/terms"];
 
 app.get("/robots.txt", (req, res) => {
   const siteUrl = `${req.protocol}://${req.headers.host}`;

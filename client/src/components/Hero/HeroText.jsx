@@ -21,7 +21,7 @@ export default function HeroText({ onCheckToday }) {
         variants={item}
         className="mt-3 text-[2.5rem] font-extrabold leading-[1.08] tracking-tight text-charcoal sm:text-5xl md:text-4xl lg:text-[3.75rem]"
       >
-        Can You Eat
+        Can I Eat
         <br />
         Chicken Today?
       </motion.h1>

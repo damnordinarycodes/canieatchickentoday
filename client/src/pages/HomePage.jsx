@@ -16,8 +16,8 @@ function getInitialDate() {
 
 export default function HomePage() {
   usePageMeta(
-    "Chicken Day — Should You Eat Chicken Today?",
-    "A playful, premium way to check whether today is a chicken-friendly day in India — by state, religion, or region."
+    "Can I Eat Chicken Today? | Chicken Day",
+    "Can I eat chicken today? Check India's chicken-friendly calendar by date, state, religion, or region."
   );
 
   const [selectedDate, setSelectedDate] = useState(getInitialDate);

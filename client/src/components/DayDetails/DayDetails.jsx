@@ -47,8 +47,10 @@ export default function DayDetails({ dateISO, state, religion, region, dayInfo, 
             <p className="mt-4 text-xl font-bold text-charcoal">{dayInfo.occasion}</p>
           )}
 
-          <p className="mt-3 text-sm leading-relaxed text-charcoal-soft">
-            {loading ? "Loading…" : dayInfo?.description}
+            <p className="mt-3 text-sm leading-relaxed text-charcoal-soft">
+              <span className="box-decoration-clone bg-soft-orange/30 px-1">
+                {loading ? "Loadingâ€¦" : dayInfo?.description}
+              </span>
           </p>
 
           <p className="mt-5 text-xs italic text-charcoal-soft/80">{disclaimer({ state, religion, region })}</p>

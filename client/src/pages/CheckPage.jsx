@@ -21,8 +21,8 @@ function getDate() {
 
 export default function CheckPage() {
   usePageMeta(
-    "Check by State or Tradition - Chicken Day",
-    "Explore chicken-friendly days by state, religion, or region."
+    "Can I Eat Chicken Today? Check by State | Chicken Day",
+    "Find out whether you can eat chicken today in India by checking your state, religion, or region."
   );
 
   const [selectedDate, setSelectedDate] = useState(getDate);
