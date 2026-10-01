@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "../../router";
 
 const container = {
   hidden: {},
@@ -35,12 +36,12 @@ export default function HeroText({ onCheckToday }) {
         >
           Check Today's Day
         </button>
-        <a
-          href="#calendar"
+        <Link
+          href="/check"
           className="glass rounded-full px-5 py-2.5 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.03] active:scale-95 sm:px-6 sm:py-3"
         >
-          View Calendar
-        </a>
+          Check in detail
+        </Link>
       </motion.div>
     </motion.div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Hero from "../components/Hero/Hero";
 import CalendarSection from "../components/Calendar/CalendarSection";
 import DayDetails from "../components/DayDetails/DayDetails";
@@ -14,11 +14,6 @@ function getInitialDate() {
   return fromUrl && /^\d{4}-\d{2}-\d{2}$/.test(fromUrl) ? fromUrl : todayISO();
 }
 
-function getInitialParam(key) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(key) || "";
-}
-
 export default function HomePage() {
   usePageMeta(
     "Chicken Day — Should You Eat Chicken Today?",
@@ -26,64 +21,16 @@ export default function HomePage() {
   );
 
   const [selectedDate, setSelectedDate] = useState(getInitialDate);
-  const [selectedState, setSelectedState] = useState(() => getInitialParam("state"));
-  const [selectedReligion, setSelectedReligion] = useState(() => getInitialParam("religion"));
-  const [selectedRegion, setSelectedRegion] = useState(() => getInitialParam("region"));
-  const hasMounted = useRef(false);
-  const { dayInfo, loading } = useDayInfo(selectedDate, selectedState, selectedReligion, selectedRegion);
-
-  // State, religion and region are three different lenses on the same
-  // calendar — picking one clears the other two rather than trying to
-  // combine them (the underlying data doesn't support e.g. "Hindu customs
-  // in North India" as a single view).
-  const handleStateChange = (value) => {
-    setSelectedState(value);
-    if (value) {
-      setSelectedReligion("");
-      setSelectedRegion("");
-    }
-  };
-
-  const handleReligionChange = (value) => {
-    setSelectedReligion(value);
-    if (value) {
-      setSelectedState("");
-      setSelectedRegion("");
-    }
-  };
-
-  const handleRegionChange = (value) => {
-    setSelectedRegion(value);
-    if (value) {
-      setSelectedState("");
-      setSelectedReligion("");
-    }
-  };
+  const { dayInfo, loading } = useDayInfo(selectedDate, "", "", "");
 
   useEffect(() => {
     const url = new URL(window.location.href);
     url.searchParams.set("date", selectedDate);
-    if (selectedState) url.searchParams.set("state", selectedState);
-    else url.searchParams.delete("state");
-    if (selectedReligion) url.searchParams.set("religion", selectedReligion);
-    else url.searchParams.delete("religion");
-    if (selectedRegion) url.searchParams.set("region", selectedRegion);
-    else url.searchParams.delete("region");
+    url.searchParams.delete("state");
+    url.searchParams.delete("religion");
+    url.searchParams.delete("region");
     window.history.replaceState(null, "", url);
-  }, [selectedDate, selectedState, selectedReligion, selectedRegion]);
-
-  useEffect(() => {
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      return;
-    }
-    if (selectedReligion) {
-      requestAnimationFrame(() => {
-        const calendar = document.querySelector("#calendar");
-        if (calendar) window.scrollTo({ top: calendar.offsetTop - 80, behavior: "auto" });
-      });
-    }
-  }, [selectedReligion]);
+  }, [selectedDate]);
 
   // If we arrived here via a same-page nav link (e.g. "/#calendar" clicked
   // from /privacy), scroll to that section once mounted — a client-rendered
@@ -99,30 +46,23 @@ export default function HomePage() {
     <>
       <Hero
         dateISO={selectedDate}
-        state={selectedState}
-        onStateChange={handleStateChange}
-        religion={selectedReligion}
-        onReligionChange={handleReligionChange}
-        region={selectedRegion}
-        onRegionChange={handleRegionChange}
         dayInfo={dayInfo}
-        loading={loading}
         onCheckToday={() => setSelectedDate(todayISO())}
       />
 
       <section id="calendar" className="mx-auto grid max-w-6xl scroll-mt-20 grid-cols-1 gap-6 px-5 py-8 sm:px-6 sm:py-10 lg:grid-cols-[1.4fr_1fr]">
         <CalendarSection
           selectedDate={selectedDate}
-          state={selectedState}
-          religion={selectedReligion}
-          region={selectedRegion}
+          state=""
+          religion=""
+          region=""
           onSelect={setSelectedDate}
         />
         <DayDetails
           dateISO={selectedDate}
-          state={selectedState}
-          religion={selectedReligion}
-          region={selectedRegion}
+          state=""
+          religion=""
+          region=""
           dayInfo={dayInfo}
           loading={loading}
         />

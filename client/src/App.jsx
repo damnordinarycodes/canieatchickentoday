@@ -4,6 +4,7 @@ import ConsentBanner from "./components/ConsentBanner/ConsentBanner";
 import HomePage from "./pages/HomePage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
+import CheckPage from "./pages/CheckPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { useRoute } from "./router";
 import { useConsent } from "./hooks/useConsent";
@@ -12,6 +13,7 @@ const PAGES = {
   "/": HomePage,
   "/privacy": PrivacyPage,
   "/terms": TermsPage,
+  "/check": CheckPage,
 };
 
 export default function App() {

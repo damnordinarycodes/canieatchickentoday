@@ -1,9 +1,5 @@
 import { lazy, Suspense } from "react";
 import HeroText from "./HeroText";
-import StateSelector from "./StateSelector";
-import ReligionSelector from "./ReligionSelector";
-import RegionSelector from "./RegionSelector";
-import TodayStatus from "./TodayStatus";
 import ChickenFallback from "../ChickenViewer/ChickenFallback";
 
 // Three.js + @react-three/fiber/drei are the single biggest chunk of the
@@ -13,14 +9,7 @@ const ChickenViewer = lazy(() => import("../ChickenViewer/ChickenViewer"));
 
 export default function Hero({
   dateISO,
-  state,
-  onStateChange,
-  religion,
-  onReligionChange,
-  region,
-  onRegionChange,
   dayInfo,
-  loading,
   onCheckToday,
 }) {
   return (
@@ -30,19 +19,6 @@ export default function Hero({
     >
       <div className="flex flex-col gap-4 sm:gap-5">
         <HeroText onCheckToday={onCheckToday} />
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <StateSelector state={state} onChange={onStateChange} />
-          <ReligionSelector religion={religion} onChange={onReligionChange} />
-        </div>
-        <RegionSelector region={region} onChange={onRegionChange} />
-        <TodayStatus
-          dateISO={dateISO}
-          state={state}
-          religion={religion}
-          region={region}
-          dayInfo={dayInfo}
-          loading={loading}
-        />
       </div>
       <Suspense
         fallback={
